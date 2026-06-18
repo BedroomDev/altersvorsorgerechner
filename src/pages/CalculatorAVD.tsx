@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { ArrowLeft, ArrowRight, HelpCircle, Minus, Plus } from 'lucide-react'
 import {
   AreaChart,
@@ -40,11 +40,21 @@ const CONTRIBUTION_OPTIONS = [
   { value: 570, label: '570 €', sublabel: 'Maximum' },
 ]
 
-const INCOME_BRACKETS = [
+const INCOME_BRACKETS_LEDIG = [
   { rate: 0.21, label: 'Bis 17.000 €', sublabel: '~21 % Grenzsteuersatz' },
   { rate: 0.30, label: '17.000 - 37.000 €', sublabel: '~30 % Grenzsteuersatz' },
   { rate: 0.37, label: '37.000 - 57.000 €', sublabel: '~37 % Grenzsteuersatz' },
   { rate: 0.42, label: 'Über 57.000 €', sublabel: '~42 % Grenzsteuersatz' },
+]
+
+// Verheiratet (Zusammenveranlagung/Splittingtarif):
+// Same Grenzsteuersatz at the given bracket, but income thresholds are doubled
+// since household income is split for tax calculation.
+const INCOME_BRACKETS_VERHEIRATET = [
+  { rate: 0.21, label: 'Bis 34.000 €', sublabel: '~21 % Grenzsteuersatz' },
+  { rate: 0.30, label: '34.000 - 74.000 €', sublabel: '~30 % Grenzsteuersatz' },
+  { rate: 0.37, label: '74.000 - 114.000 €', sublabel: '~37 % Grenzsteuersatz' },
+  { rate: 0.42, label: 'Über 114.000 €', sublabel: '~42 % Grenzsteuersatz' },
 ]
 
 const RETURN_OPTIONS = [6, 7.5, 9]
@@ -149,6 +159,29 @@ export default function CalculatorAVD() {
   const retirementAge = 67
   const savingsYears = Math.max(retirementAge - currentAge, 0)
   const lifeExpectancy = LIFE_EXPECTANCY[gender]
+
+  // Active income brackets based on familienstand
+  const incomeBrackets = familienstand === 'ledig' ? INCOME_BRACKETS_LEDIG : INCOME_BRACKETS_VERHEIRATET
+
+  // Reset marginal tax rate when familienstand changes to the equivalent bracket position
+  useEffect(() => {
+    // Find which bracket index is currently selected
+    const currentBrackets = familienstand === 'ledig' ? INCOME_BRACKETS_LEDIG : INCOME_BRACKETS_VERHEIRATET
+    const otherBrackets = familienstand === 'ledig' ? INCOME_BRACKETS_VERHEIRATET : INCOME_BRACKETS_LEDIG
+    
+    // Check if current rate exists in the new bracket set
+    const existsInNew = currentBrackets.some(b => b.rate === marginalTaxRate)
+    if (!existsInNew) {
+      // Find closest index in the old brackets
+      const oldIndex = otherBrackets.findIndex(b => b.rate === marginalTaxRate)
+      if (oldIndex >= 0 && oldIndex < currentBrackets.length) {
+        setMarginalTaxRate(currentBrackets[oldIndex].rate)
+      } else {
+        // Default to second bracket (most common)
+        setMarginalTaxRate(currentBrackets[1]?.rate ?? currentBrackets[0].rate)
+      }
+    }
+  }, [familienstand]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Förderung preview for Step 1
   const foerderung = useMemo(
@@ -285,7 +318,7 @@ export default function CalculatorAVD() {
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                {INCOME_BRACKETS.map((bracket) => (
+                {incomeBrackets.map((bracket) => (
                   <button
                     key={bracket.rate}
                     type="button"

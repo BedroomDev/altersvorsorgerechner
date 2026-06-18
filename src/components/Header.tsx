@@ -9,6 +9,7 @@ const navLinks = [
   { href: '/rechner/avd', label: 'AVD Rechner' },
   { href: '/rechner/vergleich', label: 'Vergleich' },
   { href: '/rechner/fruehstart', label: 'Frühstart-Rente' },
+  { href: '/rechner/debeka-cai', label: 'Debeka CAI' },
 ]
 
 export function Header() {

@@ -1,5 +1,5 @@
 import { Link } from 'wouter'
-import { PiggyBank, Scale, Baby, ArrowRight } from 'lucide-react'
+import { PiggyBank, Scale, Baby, TrendingUp, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface CalculatorOption {
@@ -35,11 +35,19 @@ const calculatorOptions: CalculatorOption[] = [
     href: '/rechner/fruehstart',
     gradient: 'from-chart-orange/20 to-chart-orange/5',
   },
+  {
+    title: 'Debeka CAI Rechner',
+    description:
+      'Fondsgebundene Rentenversicherung mit dem Debeka Global Shares Fonds. Berechnen Sie Ihre Rendite nach Kosten und Steuern.',
+    icon: <TrendingUp className="h-8 w-8" />,
+    href: '/rechner/debeka-cai',
+    gradient: 'from-emerald-500/20 to-emerald-600/5',
+  },
 ]
 
 export default function CalculatorSelector() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {calculatorOptions.map((option) => (
         <Link key={option.href} href={option.href} className="block group">
           <div

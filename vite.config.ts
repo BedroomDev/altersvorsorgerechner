@@ -13,4 +13,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      // Proxy Debeka fund data API to bypass CORS during development
+      '/fonds-service': {
+        target: 'https://www.debeka.de',
+        changeOrigin: true,
+        secure: true,
+      },
+    },
+  },
 })

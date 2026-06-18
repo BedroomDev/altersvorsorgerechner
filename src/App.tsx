@@ -5,6 +5,7 @@ import Home from '@/pages/Home'
 import CalculatorAVD from '@/pages/CalculatorAVD'
 import CalculatorComparison from '@/pages/CalculatorComparison'
 import CalculatorEarlyStart from '@/pages/CalculatorEarlyStart'
+import CalculatorDebekaCAI from '@/pages/CalculatorDebekaCAI'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/rechner/avd" component={CalculatorAVD} />
           <Route path="/rechner/vergleich" component={CalculatorComparison} />
           <Route path="/rechner/fruehstart" component={CalculatorEarlyStart} />
+          <Route path="/rechner/debeka-cai" component={CalculatorDebekaCAI} />
         </Switch>
       </main>
       <Footer />
