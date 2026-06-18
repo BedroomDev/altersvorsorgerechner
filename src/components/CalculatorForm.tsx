@@ -488,6 +488,7 @@ export default function CalculatorForm({
               value={earlyMonthlySavings}
               min={10}
               max={570}
+              step={10}
               suffix="€"
               onChange={setEarlyMonthlySavings}
             />
@@ -592,6 +593,7 @@ export default function CalculatorForm({
               value={monthlySavings}
               min={10}
               max={570}
+              step={10}
               suffix="€"
               onChange={setMonthlySavings}
             />
@@ -604,6 +606,7 @@ export default function CalculatorForm({
               value={annualBonus}
               min={0}
               max={10000}
+              step={100}
               suffix="€"
               onChange={setAnnualBonus}
             />
